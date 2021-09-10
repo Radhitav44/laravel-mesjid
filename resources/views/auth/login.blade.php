@@ -29,7 +29,7 @@
                                         </svg>
                                         <input id="email" type="email" placeholder="Email"
                                             class="form-control @error('email') is-invalid @enderror" name="email"
-                                            value="admin@cork.com" required autocomplete="email" autofocus>
+                                            value="admin@mail.com" required autocomplete="email" autofocus>
 
                                         @error('email')
                                         <span class="invalid-feedback" role="alert">
@@ -50,7 +50,7 @@
                                             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                         </svg>
                                         <input id="password" name="password" type="password" placeholder="Password"
-                                            value="password"
+                                            value="secret12345"
                                             class="form-control @error('password') is-invalid @enderror" name="password"
                                             required autocomplete="current-password">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
