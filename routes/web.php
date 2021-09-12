@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
@@ -9,14 +10,12 @@ Route::get('/', function () {
     return redirect(route('login'));
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard.index');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 Route::prefix('dashboard')->group(function () {
     Route::resource('posts', PostController::class);
+    Route::put('posts/publish/{post}', [PostController::class, 'publish'])->name('posts.publish');
     Route::resource('users', UserController::class);
-    Route::get('profile', [UserController::class, 'profile'])->name('user.profile');
     Route::resource('feedbacks', FeedbackController::class);
 });
 

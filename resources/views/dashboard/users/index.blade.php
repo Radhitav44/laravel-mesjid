@@ -22,6 +22,7 @@
 </div>
 @endsection
 @section('content')
+@include('components.alert')
 <div class="statbox widget box box-shadow">
     <div class="widget-content widget-content-area">
         <table id="style-1" class="table style-1 dt-table-hover non-hover">

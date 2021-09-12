@@ -53,6 +53,7 @@
                                 </svg>
                             </a>
                         </li>
+                        @if (optional(auth()->user()->division)->name != 'User')
                         <li class="menu single-menu">
                             <a href="{{ route('posts.index') }}" aria-expanded="false"
                                 class="dropdown-toggle autodroprown">
@@ -73,6 +74,7 @@
                                 </svg>
                             </a>
                         </li>
+                        @endif
                         @if (optional(auth()->user()->division)->name == 'Admin')
                         <li class="menu single-menu">
                             <a href="{{ route('users.index') }}" aria-expanded="false"
@@ -140,7 +142,7 @@
                         </div>
                     </div>
                     <div class="dropdown-item">
-                        <a href="{{ route('user.profile') }}">
+                        <a href="{{ route('users.edit', auth()->id()) }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="feather feather-user">

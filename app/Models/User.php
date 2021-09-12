@@ -46,4 +46,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\Feedback', 'questioner_id');
     }
+
+    public function views()
+    {
+        return $this->hasMany('App\Models\PostView', 'user_id');
+    }
 }

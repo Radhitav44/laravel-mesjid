@@ -5,6 +5,8 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/theme-checkbox-radio.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/dt-global_style.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('plugins/table/datatable/custom_dt_custom.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/tables/table-basic.css') }}">
+<link href="{{ asset('assets/css/users/user-profile.css') }}" rel="stylesheet" type="text/css" />
 <!-- END PAGE LEVEL CUSTOM STYLES -->
 @endsection
 @section('header-title', 'Posts')
@@ -22,61 +24,119 @@
 </div>
 @endsection
 @section('content')
+@include('components.alert')
 <div class="statbox widget box box-shadow">
     <div class="widget-content widget-content-area">
         <table id="style-1" class="table style-1 dt-table-hover non-hover">
             <thead>
                 <tr>
-                    <th class="checkbox-column dt-no-sorting"> ID </th>
-                    <th>Title</th>
                     <th>User</th>
-                    <th>Division</th>
+                    <th>Title</th>
                     <th>Content</th>
-                    <th class="">Status</th>
-                    <th class="text-center dt-no-sorting">Action</th>
+                    <th>Division</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Dilihat</th>
+                    <th class="text-center dt-no-sorting">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($posts as $post)
                 <tr>
-                    <td class="checkbox-column"> {{ $post->id }} </td>
-                    <td class="user-name">{{ $post->title }}</td>
                     <td class="user-name">{{ $post->user->name }}</td>
+                    <td class="user-name">{{ Str::limit($post->title, 15) }}</td>
+                    <td class="user-name">{!! Str::limit($post->body, 15) !!}</td>
                     <td class="user-name">{{ $post->division->name }}</td>
-                    <td class="user-name">{!! $post->body !!}</td>
-                    <td>
-                        <div class="d-flex">
-                            <div class=" align-self-center d-m-success  mr-1 data-marker"></div>
-                            <span class="label label-success">{{ $post->status ? 'published' : 'pending' }}</span>
-                        </div>
+                    <td class="text-center">
+                        <span
+                            class="badge {{ $post->status ? 'badge-success' : 'badge-info' }}">{{ $post->status ? 'published' : 'pending' }}</span>
                     </td>
                     <td class="text-center">
-                        <div class="dropdown custom-dropdown">
-                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink1"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-more-horizontal">
-                                    <circle cx="12" cy="12" r="1"></circle>
-                                    <circle cx="19" cy="12" r="1"></circle>
-                                    <circle cx="5" cy="12" r="1"></circle>
-                                </svg>
-                            </a>
-
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                @if (optional(auth()->user()->division)->name != 'Admin' && $post->status)
-                                <a class="dropdown-item" href="javascript:void(0)" style="cursor: not-allowed;">Edit</a>
-                                <button class="dropdown-item" type="button" style="cursor: not-allowed;">Hapus</button>
-                                @else
-                                <a class="dropdown-item" href="{{ route('posts.edit', $post->id) }}">Edit</a>
-                                <form action="{{ route('posts.destroy', $post->id) }}" method="POST"
-                                    onsubmit="return confirm('Anda yakin ingin menghapus postingan ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="dropdown-item" type="submit">Hapus</button>
-                                </form>
-                                @endif
+                        <a href="javascript:void(0)" data-toggle="modal" data-target="#postview-{{ $post->id }}">
+                            <span>{{ count($post->views) }}</span>
+                        </a>
+                    </td>
+                    <!-- Modal -->
+                    <div class="modal fade" id="postview-{{ $post->id }}" tabindex="-1" role="dialog"
+                        aria-labelledby="postview" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="postview">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                                            height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-x">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="education layout-spacing ">
+                                        <div class="widget-content widget-content-area">
+                                            <div class="timeline-alter">
+                                                @foreach ($post->views as $view)
+                                                <div class="item-timeline">
+                                                    <div class="t-meta-date w-50">
+                                                        <p class="w-100">{{ $view->created_at }}</p>
+                                                    </div>
+                                                    <div class="t-dot">
+                                                    </div>
+                                                    <div class="t-text w-50">
+                                                        <p>{{ $view->user->name }}</p>
+                                                        <p>{{ $view->user->mobile }}</p>
+                                                    </div>
+                                                </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn" data-dismiss="modal"><i class="flaticon-cancel-12"></i>
+                                        Discard</button>
+                                    <button type="button" class="btn btn-primary">Save</button>
+                                </div>
                             </div>
+                        </div>
+                    </div>
+                    <td class="text-center">
+                        <div class="btn-group">
+                            @if (optional(auth()->user()->division)->name != 'Admin' && $post->status)
+                            <a href="javascript:void(0)" style="cursor: not-allowed;" class="btn btn-link">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button style="cursor: not-allowed;" type="button" class="btn btn-link">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            @else
+                            @if (optional(auth()->user()->division)->name == 'Admin' && !$post->status)
+                            <form action="{{ route('posts.publish', $post->id) }}" method="POST"
+                                onsubmit="return confirm('Anda yakin ingin mem-publish postingan ini?');">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-link">
+                                    <i class="fas fa-share"></i>
+                                </button>
+                            </form>
+                            @else
+                            <button type="button" class="btn btn-link" style="cursor: not-allowed;">
+                                <i class="fas fa-share"></i>
+                            </button>
+                            @endif
+                            <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-link">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('posts.destroy', $post->id) }}" method="POST"
+                                onsubmit="return confirm('Anda yakin ingin menghapus postingan ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-link">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                            @endif
                         </div>
                     </td>
                 </tr>
@@ -92,14 +152,6 @@
 <script>
     // var e;
             c1 = $('#style-1').DataTable({
-                headerCallback:function(e, a, t, n, s) {
-                    e.getElementsByTagName("th")[0].innerHTML='<label class="new-control new-checkbox checkbox-outline-primary m-auto">\n<input type="checkbox" class="new-control-input chk-parent select-customers-info" id="customer-all-info">\n<span class="new-control-indicator"></span><span style="visibility:hidden">c</span>\n</label>'
-                },
-                columnDefs:[ {
-                    targets:0, width:"30px", className:"", orderable:!1, render:function(e, a, t, n) {
-                        return'<label class="new-control new-checkbox checkbox-outline-primary  m-auto">\n<input type="checkbox" class="new-control-input child-chk select-customers-info" id="customer-all-info">\n<span class="new-control-indicator"></span><span style="visibility:hidden">c</span>\n</label>'
-                    }
-                }],
                 "dom": "<'dt--top-section'<'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" +
             "<'table-responsive'tr>" +
             "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",

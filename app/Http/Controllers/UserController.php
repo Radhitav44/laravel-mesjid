@@ -39,8 +39,9 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request['password'] = bcrypt('secret12345');
-        User::create($request->all());
-        return back();
+        if (User::create($request->all())) {
+            return redirect(route('users.index'))->with('success', 'Data Saved');
+        }
     }
 
     /**
@@ -62,6 +63,14 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        if (optional(auth()->user()->division)->name != 'Admin') {
+            if (auth()->id() == $user->id) {
+                $divisions = Division::all();
+                return view('dashboard.users.edit', compact('user', 'divisions'));
+            } else {
+                return back();
+            }
+        }
         $divisions = Division::all();
         return view('dashboard.users.edit', compact('user', 'divisions'));
     }
@@ -78,8 +87,9 @@ class UserController extends Controller
         if ($request->password) {
             $request['password'] = bcrypt($request->password);
         }
-        $user->update($request->all());
-        return back();
+        if ($user->update($request->all())) {
+            return redirect(route('users.index'))->with('success', 'Data Saved');
+        }
     }
 
     /**
@@ -91,7 +101,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return back();
+        return redirect(route('users.index'))->with('danger', 'Data Saved');
     }
 
     public function profile()

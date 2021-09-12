@@ -19,4 +19,9 @@ class Post extends Model
     {
         return $this->belongsTo('App\Models\Division');
     }
+
+    public function views()
+    {
+        return $this->hasMany('App\Models\PostView');
+    }
 }

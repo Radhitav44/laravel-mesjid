@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Division;
 use App\Models\Post;
+use App\Models\PostView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -16,7 +17,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        if (optional(auth()->user()->division)->name == 'Admin') {
+            $posts = Post::all();
+        } else {
+            $posts = Post::where('division_id', auth()->user()->division_id)->get();
+        }
         return view('dashboard.posts.index', compact('posts'));
     }
 
@@ -27,7 +32,11 @@ class PostController extends Controller
      */
     public function create()
     {
-        $divisions = Division::all();
+        if (optional(auth()->user()->division)->name == 'Admin') {
+            $divisions = Division::all();
+        } else {
+            $divisions = Division::where('id', auth()->user()->division_id)->get();
+        }
         return view('dashboard.posts.create', compact('divisions'));
     }
 
@@ -45,9 +54,12 @@ class PostController extends Controller
             'body' => 'required|min:10',
         ]);
         $post['slug'] = Str::slug($request->title);
+        if ($request->has('status')) {
+            $post['status'] = $request->has('status') ? true : false;
+        }
 
         if (auth()->user()->posts()->create($post)) {
-            return back();
+            return redirect(route('posts.index'))->with('success', 'Data Saved');
         }
     }
 
@@ -59,7 +71,12 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $url = url()->previous();
+        $route = app('router')->getRoutes($url)->match(app('request')->create($url))->getName();
+        if ($route == 'dashboard') {
+            $this->view($post, $route);
+        }
+        return view('dashboard.posts.show', compact('post', 'route'));
     }
 
     /**
@@ -70,7 +87,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        $divisions = Division::all();
+        return view('dashboard.posts.edit', compact('post', 'divisions'));
     }
 
     /**
@@ -82,14 +100,18 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $post = $this->validate($request, [
+        $postData = $this->validate($request, [
             'title' => 'required|min:5',
             'division_id' => 'required|numeric',
             'body' => 'required|min:10',
         ]);
+        $postData['slug'] = Str::slug($request->title);
+        if ($request->has('status')) {
+            $postData['status'] = $request->has('status') ? true : false;
+        }
 
-        if ($post->update($post)) {
-            return back();
+        if ($post->update($postData)) {
+            return redirect(route('posts.index'))->with('success', 'Data Saved');
         }
     }
 
@@ -102,7 +124,22 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         if ($post->delete()) {
-            return back();
+            return redirect(route('posts.index'))->with('danger', 'Data Saved');
+        }
+    }
+
+    public function publish(Post $post)
+    {
+        if ($post->update(['status' => true])) {
+            return redirect(route('posts.index'))->with('success', 'Data Saved');
+        }
+    }
+
+    public function view(Post $post, $route)
+    {
+        if (!PostView::where(['user_id' => auth()->id(), 'post_id' => $post->id])->first()) {
+            auth()->user()->views()->create(['post_id' => $post->id]);
+            return redirect(route($route));
         }
     }
 }

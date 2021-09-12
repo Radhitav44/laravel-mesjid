@@ -56,7 +56,7 @@ class FeedbackController extends Controller
         ]);
 
         if (auth()->user()->feedbacks()->create($feedback)) {
-            return redirect(route('feedbacks.index'))->with('message', 'Data Saved');
+            return redirect(route('feedbacks.index'))->with('success', 'Data Saved');
         }
     }
 
@@ -116,7 +116,7 @@ class FeedbackController extends Controller
         }
 
         if ($feedback->update($feedbackData)) {
-            return redirect(route('feedbacks.index'))->with('message', 'Data Saved');
+            return redirect(route('feedbacks.index'))->with('success', 'Data Saved');
         }
     }
 
@@ -129,7 +129,7 @@ class FeedbackController extends Controller
     public function destroy(Feedback $feedback)
     {
         if ($feedback->delete()) {
-            return back();
+            return redirect(route('feedbacks.destroy'))->with('danger', 'Data Saved');
         }
     }
 }
