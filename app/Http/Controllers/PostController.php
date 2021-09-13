@@ -57,6 +57,12 @@ class PostController extends Controller
         if ($request->has('status')) {
             $post['status'] = $request->has('status') ? true : false;
         }
+        $imageName = null;
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->file('image')->extension();
+            $request->image->move(public_path('assets/posts'), $imageName);
+        }
+        $post['image'] = $imageName;
 
         if (auth()->user()->posts()->create($post)) {
             return redirect(route('posts.index'))->with('success', 'Data Saved');

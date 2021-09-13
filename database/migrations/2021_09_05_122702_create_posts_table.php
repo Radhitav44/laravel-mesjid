@@ -21,6 +21,7 @@ class CreatePostsTable extends Migration
             $table->string('slug');
             $table->boolean('status')->default(false);
             $table->text('body');
+            $table->string('image');
             $table->timestamps();
         });
     }

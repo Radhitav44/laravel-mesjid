@@ -10,7 +10,7 @@
             <div class="col-4">
                 <div class="card component-card_9">
                     <a href="{{ route('posts.show', $post->id) }}">
-                        <img src="{{ asset('assets/img/400x300.jpg') }}" class="card-img-top" alt="widget-card-2">
+                        <img src="{{ asset('assets/posts/' . $post->image) }}" class="card-img-top" alt="widget-card-2">
                     </a>
                     <div class="card-body">
                         <p class="meta-date">{{ $post->created_at }}</p>

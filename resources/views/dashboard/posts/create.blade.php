@@ -22,7 +22,7 @@
     <div class="col-lg-12">
         <div class="statbox widget box box-shadow">
             <div class="widget-content widget-content-area">
-                <form action="{{ route('posts.store') }}" method="post">
+                <form action="{{ route('posts.store') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div id="content-container">
                         <div class="form-group">
@@ -57,6 +57,12 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-file mb-4">
+                                <input type="file" class="custom-file-input" id="image" name="image">
+                                <label class="custom-file-label" for="image">Pilih gambar</label>
+                            </div>
                         </div>
                         @if (optional(auth()->user()->division)->name == 'Admin')
                         <div class="form-group">
