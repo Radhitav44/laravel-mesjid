@@ -50,38 +50,67 @@
                     <td class="user-name">{!! $feedback->answer ?: '<span>-</span>' !!}</td>
                     <td class="text-center">
                         <span
-                            class="badge {{ $feedback->status == 'request' ? 'badge-danger' : null }} {{ $feedback->status == 'request' ? 'badge-warning' : null }} {{ $feedback->status == 'answered' ? 'badge-success' : null }}">
-                            {{ $feedback->status }}
+                            class="badge {{ $feedback->status == 1 ? 'badge-danger' : null }} {{ $feedback->status == 2 ? 'badge-warning' : null }} {{ $feedback->status == 3 ? 'badge-success' : null }}">
+                            {{ $feedback->status == 1 ? 'request' : null }} {{ $feedback->status == 2 ? 'acc' : null }}
+                            {{ $feedback->status == 3 ? 'answered' : null }}
                         </span>
                     </td>
                     <td class="user-name">{{ $feedback->created_at }}</td>
                     <td class="text-center">
-                        <div class="dropdown custom-dropdown">
-                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink1"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-more-horizontal">
-                                    <circle cx="12" cy="12" r="1"></circle>
-                                    <circle cx="19" cy="12" r="1"></circle>
-                                    <circle cx="5" cy="12" r="1"></circle>
-                                </svg>
+                        <div class="btn-group">
+                            @if (optional(auth()->user()->division)->name == 'Admin')
+                            <a href="{{ route('feedbacks.edit', $feedback->id) }}" class="btn btn-link">
+                                <i class="fas fa-edit"></i>
                             </a>
+                            <form action="{{ route('feedbacks.destroy', $feedback->id) }}" method="POST"
+                                onsubmit="return confirm('Anda yakin ingin menghapus feedbacks ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-link">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                            @else
+                            @if (optional(auth()->user()->division)->name == 'User')
+                            @if ($feedback->status == 2 || $feedback->status == 3)
+                            <a href="javascript:void(0)" style="cursor: not-allowed;" class="btn btn-link">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button style="cursor: not-allowed;" type="button" class="btn btn-link">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            @else
+                            <a href="{{ route('feedbacks.edit', $feedback->id) }}" class="btn btn-link">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('feedbacks.destroy', $feedback->id) }}" method="POST"
+                                onsubmit="return confirm('Anda yakin ingin menghapus feedbacks ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-link">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                            @endif
+                            @else
+                            @if ($feedback->status == 3)
+                            <a href="javascript:void(0)" style="cursor: not-allowed;" class="btn btn-link">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button style="cursor: not-allowed;" type="button" class="btn btn-link">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            @else
+                            <a href="{{ route('feedbacks.edit', $feedback->id) }}" class="btn btn-link">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button style="cursor: not-allowed;" type="button" class="btn btn-link">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            @endif
+                            @endif
+                            @endif
 
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                @if (optional(auth()->user()->division)->name != 'Admin' && $feedback->answer)
-                                <a class="dropdown-item" href="javascript:void(0)" style="cursor: not-allowed;">Edit</a>
-                                <button class="dropdown-item" type="button" style="cursor: not-allowed;">Hapus</button>
-                                @else
-                                <a class="dropdown-item" href="{{ route('feedbacks.edit', $feedback->id) }}">Lihat</a>
-                                <form action="{{ route('feedbacks.destroy', $feedback->id) }}" method="POST"
-                                    onsubmit="return confirm('Anda yakin ingin menghapus feedbackingan ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="dropdown-item" type="submit">Hapus</button>
-                                </form>
-                                @endif
-                            </div>
                         </div>
                     </td>
                 </tr>

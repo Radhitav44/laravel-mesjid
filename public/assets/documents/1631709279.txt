@@ -1,0 +1,174 @@
+-- --------------------------------------------------------
+-- Host:                         localhost
+-- Server version:               8.0.23 - MySQL Community Server - GPL
+-- Server OS:                    Win64
+-- HeidiSQL Version:             11.2.0.6213
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+-- Dumping database structure for staz3629_hotel_prod
+CREATE DATABASE IF NOT EXISTS `staz3629_hotel_prod` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `staz3629_hotel_prod`;
+
+
+-- Dumping structure for table staz3629_hotel_prod.users
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8_general_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- Dumping data for table staz3629_hotel_prod.users: ~2 rows (approximately)
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT IGNORE INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+	(1, 'Admin', 'admin@mail.com', NULL, '$2y$10$DkrKUIiLROclq4P6rqXACum4GcKt1YH0dvx0ByAIEQDzqLaKf.J.O', NULL, '2021-09-12 10:33:59', '2021-09-12 10:33:59'),
+	(2, 'Admin2', 'admin2@mail.com', NULL, '$2y$10$h93F2AwrltCrof/n/pA0oO1bC8.YcCViPtgVGDLM66B94N3boWDKe', NULL, '2021-09-12 10:35:44', '2021-09-12 10:35:44');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+
+
+-- Dumping structure for table staz3629_hotel_prod.locations
+CREATE TABLE IF NOT EXISTS `locations` (
+  `id` int NOT NULL,
+  `latitude` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `longitude` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `address_name` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `image` varchar(255) COLLATE utf8_general_ci DEFAULT NULL,
+  `facility` json DEFAULT NULL,
+  `price` varchar(255) COLLATE utf8_general_ci DEFAULT NULL,
+  `type` varchar(255) COLLATE utf8_general_ci NOT NULL DEFAULT 'tour',
+  `open_at` datetime DEFAULT NULL,
+  `close_at` datetime DEFAULT NULL,
+  `category_id` int DEFAULT NULL,
+  `description` text COLLATE utf8_general_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- Dumping data for table staz3629_hotel_prod.locations: ~4 rows (approximately)
+/*!40000 ALTER TABLE `locations` DISABLE KEYS */;
+INSERT IGNORE INTO `locations` (`id`, `latitude`, `longitude`, `address_name`, `image`, `facility`, `price`, `type`, `open_at`, `close_at`, `category_id`, `description`, `created_at`, `updated_at`) VALUES
+	(0, '5.191512366357122', '97.14498108013811', 'Aceh', '1631443069.png', '["ac", "shower", "dining", "aa", "desc1"]', '12000', 'tour', '2017-06-01 08:30:00', '2017-06-01 08:35:00', NULL, 'desc1', '2021-09-12 10:37:49', '2021-09-12 10:37:49'),
+	(1, '5.1909727824953', '97.14669769662794', 'Denmark', '1631443221.png', '["dd"]', '2000', 'tour', '2021-09-13 17:39:00', '2021-09-12 17:40:00', NULL, 'desc', '2021-09-12 10:40:21', '2021-09-12 10:40:21'),
+	(2, '5.191464284645594', '97.14626384887752', 'jalan samudra', NULL, NULL, NULL, 'path', NULL, NULL, NULL, NULL, '2021-09-12 10:43:07', '2021-09-12 10:43:07'),
+	(3, '5.19099415216198', '97.14495351765304', 'Jalan Pase', NULL, NULL, NULL, 'path', NULL, NULL, NULL, NULL, '2021-09-12 10:43:53', '2021-09-12 10:43:53'),
+	(4, '5.1909620976617', '97.14631722843004', 'Jalan Pulang', NULL, NULL, NULL, 'path', NULL, NULL, NULL, NULL, '2021-09-12 10:46:45', '2021-09-12 10:46:45');
+/*!40000 ALTER TABLE `locations` ENABLE KEYS */;
+
+-- Dumping structure for table staz3629_hotel_prod.facilities
+CREATE TABLE IF NOT EXISTS `facilities` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `latitude` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `longitude` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `address_name` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `image` varchar(255) COLLATE utf8_general_ci DEFAULT NULL,
+  `open_at` datetime DEFAULT NULL,
+  `close_at` datetime DEFAULT NULL,
+  `description` text COLLATE utf8_general_ci,
+  `location_id` bigint unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- Dumping data for table staz3629_hotel_prod.facilities: ~0 rows (approximately)
+/*!40000 ALTER TABLE `facilities` DISABLE KEYS */;
+/*!40000 ALTER TABLE `facilities` ENABLE KEYS */;
+
+-- Dumping structure for table staz3629_hotel_prod.failed_jobs
+CREATE TABLE IF NOT EXISTS `failed_jobs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `connection` text COLLATE utf8_general_ci NOT NULL,
+  `queue` text COLLATE utf8_general_ci NOT NULL,
+  `payload` longtext COLLATE utf8_general_ci NOT NULL,
+  `exception` longtext COLLATE utf8_general_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- Dumping data for table staz3629_hotel_prod.failed_jobs: ~0 rows (approximately)
+/*!40000 ALTER TABLE `failed_jobs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `failed_jobs` ENABLE KEYS */;
+
+-- Dumping structure for table staz3629_hotel_prod.graphs
+CREATE TABLE IF NOT EXISTS `graphs` (
+  `id` int NOT NULL,
+  `sampling_id_1` int NOT NULL,
+  `sampling_id_2` int NOT NULL,
+  `distance` varchar(255) COLLATE utf8_general_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `graphs_sampling_id_1_foreign` (`sampling_id_1`),
+  KEY `graphs_sampling_id_2_foreign` (`sampling_id_2`),
+  CONSTRAINT `graphs_sampling_id_1_foreign` FOREIGN KEY (`sampling_id_1`) REFERENCES `locations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `graphs_sampling_id_2_foreign` FOREIGN KEY (`sampling_id_2`) REFERENCES `locations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- Dumping data for table staz3629_hotel_prod.graphs: ~8 rows (approximately)
+/*!40000 ALTER TABLE `graphs` DISABLE KEYS */;
+INSERT IGNORE INTO `graphs` (`id`, `sampling_id_1`, `sampling_id_2`, `distance`, `created_at`, `updated_at`) VALUES
+	(0, 0, 2, '0.142', '2021-09-12 10:47:16', '2021-09-12 10:47:16'),
+	(1, 2, 0, '0.142', '2021-09-12 10:47:25', '2021-09-12 10:47:25'),
+	(2, 0, 3, '0.058', '2021-09-12 10:47:35', '2021-09-12 10:47:35'),
+	(3, 3, 0, '0.058', '2021-09-12 10:47:43', '2021-09-12 10:47:43'),
+	(4, 3, 4, '0.151', '2021-09-12 10:47:54', '2021-09-12 10:47:54'),
+	(5, 4, 3, '0.151', '2021-09-12 10:48:00', '2021-09-12 10:48:00'),
+	(6, 2, 4, '0.056', '2021-09-12 10:48:13', '2021-09-12 10:48:13'),
+	(7, 4, 2, '0.056', '2021-09-12 10:48:21', '2021-09-12 10:48:21'),
+	(8, 1, 4, '0.042', '2021-09-12 10:48:32', '2021-09-12 10:48:32'),
+	(9, 4, 1, '0.042', '2021-09-12 10:48:40', '2021-09-12 10:48:40');
+/*!40000 ALTER TABLE `graphs` ENABLE KEYS */;
+
+-- Dumping structure for table staz3629_hotel_prod.migrations
+CREATE TABLE IF NOT EXISTS `migrations` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `batch` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- Dumping data for table staz3629_hotel_prod.migrations: ~6 rows (approximately)
+/*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
+INSERT IGNORE INTO `migrations` (`id`, `migration`, `batch`) VALUES
+	(1, '2014_10_12_000000_create_users_table', 1),
+	(2, '2014_10_12_100000_create_password_resets_table', 1),
+	(3, '2019_08_19_000000_create_failed_jobs_table', 1),
+	(4, '2021_08_06_143356_create_locations_table', 1),
+	(5, '2021_08_07_083333_create_facilities_table', 1),
+	(6, '2021_08_13_162156_create_graphs_table', 1);
+/*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
+
+-- Dumping structure for table staz3629_hotel_prod.password_resets
+CREATE TABLE IF NOT EXISTS `password_resets` (
+  `email` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  KEY `password_resets_email_index` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- Dumping data for table staz3629_hotel_prod.password_resets: ~0 rows (approximately)
+/*!40000 ALTER TABLE `password_resets` DISABLE KEYS */;
+/*!40000 ALTER TABLE `password_resets` ENABLE KEYS */;
+

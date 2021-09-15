@@ -103,7 +103,7 @@
                     </div>
                     <td class="text-center">
                         <div class="btn-group">
-                            @if (optional(auth()->user()->division)->name != 'Admin' && $post->status)
+                            @if ($role != 'Admin' && $post->status)
                             <a href="javascript:void(0)" style="cursor: not-allowed;" class="btn btn-link">
                                 <i class="fas fa-edit"></i>
                             </a>
@@ -111,7 +111,7 @@
                                 <i class="fas fa-trash"></i>
                             </button>
                             @else
-                            @if (optional(auth()->user()->division)->name == 'Admin' && !$post->status)
+                            @if ($role == 'Admin' && !$post->status || $role == 'Ketua Pengurus' && !$post->status)
                             <form action="{{ route('posts.publish', $post->id) }}" method="POST"
                                 onsubmit="return confirm('Anda yakin ingin mem-publish postingan ini?');">
                                 @csrf

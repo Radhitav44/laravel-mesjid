@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Sarana & Prasarana'],
             ['name' => 'Sosmas'],
             ['name' => 'Kepemudaan'],
+            ['name' => 'Umum'],
+            ['name' => 'Feedback'],
         ]);
 
         $faker = Factory::create('id');

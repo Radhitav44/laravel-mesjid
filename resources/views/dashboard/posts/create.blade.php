@@ -59,10 +59,28 @@
                             @enderror
                         </div>
                         <div class="form-group">
+                            <label for="body">Gambar Thumbnail</label>
                             <div class="custom-file mb-4">
                                 <input type="file" class="custom-file-input" id="image" name="image">
                                 <label class="custom-file-label" for="image">Pilih gambar</label>
                             </div>
+                            @error('image')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="body">Gambar Thumbnail</label>
+                            <div class="custom-file mb-4">
+                                <input type="file" class="custom-file-input" id="document" name="document">
+                                <label class="custom-file-label" for="document">Pilih Dokument</label>
+                            </div>
+                            @error('document')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                         @if (optional(auth()->user()->division)->name == 'Admin')
                         <div class="form-group">

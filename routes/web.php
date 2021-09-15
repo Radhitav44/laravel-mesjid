@@ -15,6 +15,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['au
 Route::prefix('dashboard')->group(function () {
     Route::resource('posts', PostController::class);
     Route::put('posts/publish/{post}', [PostController::class, 'publish'])->name('posts.publish');
+    Route::get('posts/download/{post}', [PostController::class, 'download'])->name('posts.download');
     Route::resource('users', UserController::class);
     Route::resource('feedbacks', FeedbackController::class);
 });

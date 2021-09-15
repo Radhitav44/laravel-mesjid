@@ -31,6 +31,10 @@
 
                     <div class="privacy-content-container">
                         {!! $post->body !!}
+                        <p>
+                            <b>Document:</b>&nbsp;<a href="{{ route('posts.download', $post->id) }}"
+                                class="btn btn-link">Download</a>
+                        </p>
                     </div>
 
                 </div>

@@ -17,15 +17,9 @@ class FeedbackController extends Controller
     public function index()
     {
         $feedbacks = Feedback::query();
-        $role = optional(auth()->user()->division)->name;
-        if ($role == 'User') {
-            $feedbacks->whereIn('status', ['request', 'answered']);
-        } else {
-            if ($role == 'Admin') {
-                $feedbacks->whereIn('status', ['request', 'acc', 'answered']);
-            } else {
-                $feedbacks->whereIn('status', ['acc', 'answered']);
-            }
+        $role = optional(auth()->user()->division);
+        if (!in_array($role->name, ['Admin', 'User'])) {
+            $feedbacks->whereIn('status', [2, 3])->where('division_id', $role->id);
         }
         $feedbacks = $feedbacks->get();
         return view('dashboard.feedbacks.index', compact('feedbacks'));
@@ -38,7 +32,13 @@ class FeedbackController extends Controller
      */
     public function create()
     {
-        $divisions = Division::all();
+        $divisions = Division::whereNotIn('name', [
+            'Admin',
+            'User',
+            'Ketua Pengurus',
+            'Koordinator',
+            'Umum',
+        ])->get();
         return view('dashboard.feedbacks.create', compact('divisions'));
     }
 
@@ -79,8 +79,19 @@ class FeedbackController extends Controller
      */
     public function edit(Feedback $feedback)
     {
-        $divisions = Division::all();
-        return view('dashboard.feedbacks.edit', compact('feedback', 'divisions'));
+        $divisions = Division::whereNotIn('name', [
+            'Admin',
+            'User',
+            'Ketua Pengurus',
+            'Koordinator',
+            'Umum',
+        ]);
+        $role = optional(auth()->user()->division);
+        if (!in_array($role->name, ['Admin', 'User'])) {
+            $divisions->where('id', $role->id);
+        }
+        $divisions = $divisions->get();
+        return view('dashboard.feedbacks.edit', compact('feedback', 'divisions', 'role'));
     }
 
     /**
@@ -104,14 +115,14 @@ class FeedbackController extends Controller
                     'question' => 'required|min:5',
                     'division_id' => 'required|numeric',
                 ]);
-                $feedbackData['status'] = 'acc';
+                $feedbackData['status'] = 2;
             } else {
                 $feedbackData = $this->validate($request, [
                     'question' => 'required|min:5',
                     'division_id' => 'required|numeric',
                     'answer' => 'required|min:5',
                 ]);
-                $feedbackData['status'] = 'answered';
+                $feedbackData['status'] = 3;
             }
         }
 

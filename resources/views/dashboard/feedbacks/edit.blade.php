@@ -64,7 +64,18 @@
                         </div>
                         @endif
                         <div class="form-group mt-3">
-                            <button class="btn btn-outline-primary mb-2">Simpan</button>
+                            <button class="btn btn-outline-primary mb-2">
+                                @switch($role)
+                                @case('Admin')
+                                Acc
+                                @break
+                                @case('User')
+                                Simpan
+                                @break
+                                @default
+                                Jawab
+                                @endswitch
+                            </button>
                         </div>
                     </div>
                 </form>

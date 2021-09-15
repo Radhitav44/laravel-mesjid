@@ -6,7 +6,7 @@
 <div class="statbox widget box box-shadow">
     <div class="widget-content widget-content-area">
         <div class="row">
-            @foreach ($posts as $post)
+            @forelse ($posts as $post)
             <div class="col-4">
                 <div class="card component-card_9">
                     <a href="{{ route('posts.show', $post->id) }}">
@@ -47,7 +47,13 @@
                     </div>
                 </div>
             </div>
-            @endforeach
+            @empty
+            <div class="card w-100 m-2">
+                <div class="card-body">
+                    Belum ada postingan!
+                </div>
+            </div>
+            @endforelse
             {{ $posts->appends(request()->query())->links() }}
         </div>
     </div>

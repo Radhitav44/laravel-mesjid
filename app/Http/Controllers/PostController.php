@@ -17,12 +17,13 @@ class PostController extends Controller
      */
     public function index()
     {
-        if (optional(auth()->user()->division)->name == 'Admin') {
+        $role = optional(auth()->user()->division)->name;
+        if ($role == 'Admin' || $role == 'Ketua Pengurus') {
             $posts = Post::all();
         } else {
             $posts = Post::where('division_id', auth()->user()->division_id)->get();
         }
-        return view('dashboard.posts.index', compact('posts'));
+        return view('dashboard.posts.index', compact('posts', 'role'));
     }
 
     /**
@@ -33,7 +34,7 @@ class PostController extends Controller
     public function create()
     {
         if (optional(auth()->user()->division)->name == 'Admin') {
-            $divisions = Division::all();
+            $divisions = Division::whereNotIn('id', [1, 2, 3, 4])->get();
         } else {
             $divisions = Division::where('id', auth()->user()->division_id)->get();
         }
@@ -62,7 +63,13 @@ class PostController extends Controller
             $imageName = time() . '.' . $request->file('image')->extension();
             $request->image->move(public_path('assets/posts'), $imageName);
         }
+        $documentName = null;
+        if ($request->hasFile('document')) {
+            $documentName = time() . '.' . $request->file('document')->extension();
+            $request->document->move(public_path('assets/documents'), $documentName);
+        }
         $post['image'] = $imageName;
+        $post['document'] = $documentName;
 
         if (auth()->user()->posts()->create($post)) {
             return redirect(route('posts.index'))->with('success', 'Data Saved');
@@ -139,6 +146,11 @@ class PostController extends Controller
         if ($post->update(['status' => true])) {
             return redirect(route('posts.index'))->with('success', 'Data Saved');
         }
+    }
+
+    public function download(Post $post)
+    {
+        return response()->download(public_path('assets/documents/' . $post->document));
     }
 
     public function view(Post $post, $route)
