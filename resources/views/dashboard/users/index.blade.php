@@ -47,27 +47,18 @@
                     <td class="user-name">{{ optional($user->division)->name }}</td>
                     <td class="user-name">{{ $user->address }}</td>
                     <td class="text-center">
-                        <div class="dropdown custom-dropdown">
-                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink1"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-more-horizontal">
-                                    <circle cx="12" cy="12" r="1"></circle>
-                                    <circle cx="19" cy="12" r="1"></circle>
-                                    <circle cx="5" cy="12" r="1"></circle>
-                                </svg>
+                        <div class="btn-group">
+                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-link">
+                                <i class="fas fa-edit"></i>
                             </a>
-
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
-                                <a class="dropdown-item" href="{{ route('users.edit', $user->id) }}">Edit</a>
-                                <form action="{{ route('users.destroy', $user->id) }}" method="POST"
-                                    onsubmit="return confirm('Anda yakin ingin menghapus data ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="dropdown-item" type="submit">Hapus</button>
-                                </form>
-                            </div>
+                            <form action="{{ route('users.destroy', $user->id) }}" method="POST"
+                                onsubmit="return confirm('Anda yakin ingin menghapus data ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-link">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     </td>
                 </tr>

@@ -26,7 +26,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $divisions = Division::all();
+        $divisions = Division::where('id', '!=', 11)->get();
         return view('dashboard.users.create', compact('divisions'));
     }
 

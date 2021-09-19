@@ -22,7 +22,19 @@ class FeedbackController extends Controller
             $feedbacks->whereIn('status', [2, 3])->where('division_id', $role->id);
         }
         $feedbacks = $feedbacks->get();
-        return view('dashboard.feedbacks.index', compact('feedbacks'));
+        return view('dashboard.feedbacks.index', compact('feedbacks', 'role'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function createDraft()
+    {
+        $feedbacks = Feedback::all();
+        $divisions = Division::where('id', 12)->get();
+        return view('dashboard.feedbacks.draft', compact('divisions', 'feedbacks'));
     }
 
     /**
@@ -56,6 +68,25 @@ class FeedbackController extends Controller
         ]);
 
         if (auth()->user()->feedbacks()->create($feedback)) {
+            return redirect(route('feedbacks.index'))->with('success', 'Data Saved');
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeDraft(Request $request)
+    {
+        $feedback = $this->validate($request, [
+            'question' => 'required|min:5',
+            'division_id' => 'required|numeric',
+        ]);
+
+        if (auth()->user()->feedbacks()->create($feedback)) {
+            Feedback::whereIn('id', $request->feedback_id)->update(['status' => 4]);
             return redirect(route('feedbacks.index'))->with('success', 'Data Saved');
         }
     }

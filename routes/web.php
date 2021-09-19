@@ -18,6 +18,8 @@ Route::prefix('dashboard')->group(function () {
     Route::get('posts/download/{post}', [PostController::class, 'download'])->name('posts.download');
     Route::resource('users', UserController::class);
     Route::resource('feedbacks', FeedbackController::class);
+    Route::get('feedbacks/draft/create', [FeedbackController::class, 'createDraft'])->name('feedbacks.draft.create');
+    Route::post('feedbacks/draft/create', [FeedbackController::class, 'storeDraft'])->name('feedbacks.draft.store');
 });
 
 require __DIR__ . '/auth.php';
