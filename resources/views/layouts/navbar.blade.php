@@ -13,7 +13,7 @@
 
         <div class="nav-logo align-self-center">
             <a class="navbar-brand" href="#"><img alt="logo" src="{{ asset('assets/img/logomasjid.jpeg') }}"> <span
-                    class="navbar-brand-name">Al-Ikhlas PTC</span></a>
+                    class="navbar-brand-name">Al-Ikhlas PTC1</span></a>
         </div>
 
         <ul class="navbar-item topbar-navigation">
