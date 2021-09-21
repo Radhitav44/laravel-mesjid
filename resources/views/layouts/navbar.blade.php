@@ -12,8 +12,8 @@
             </svg></a>
 
         <div class="nav-logo align-self-center">
-            <a class="navbar-brand" href="#"><img alt="logo" src="{{ asset('assets/img/90x90.jpg') }}"> <span
-                    class="navbar-brand-name">CORK</span></a>
+            <a class="navbar-brand" href="#"><img alt="logo" src="{{ asset('assets/img/logomasjid.jpeg') }}"> <span
+                    class="navbar-brand-name">Al-Ikhlas PTC</span></a>
         </div>
 
         <ul class="navbar-item topbar-navigation">

@@ -1,5 +1,6 @@
 /node_modules
 /public/assets/posts
+/public/assets/documents
 /public/storage
 /storage/*.key
 /vendor
